@@ -6,18 +6,21 @@ const {
   getSinglePlan,
   createPlan,
   updatePlan,
-  deletePlan
+  deletePlan,
+  togglePlanStatus
 } = require("../controllers/planController");
 
-const { protectUser } = require("../middleware/auth");
+// ✅ correct middleware import
+const { protectAdmin, adminOnly } = require("../middleware/authMiddleware");
 
-// public
+// public routes
 router.get("/", getPlans);
 router.get("/:id", getSinglePlan);
 
-// admin
-router.post("/create", protectUser, createPlan);
-router.put("/:id", protectUser, updatePlan);
-router.delete("/:id", protectUser, deletePlan);
+// admin routes
+router.post("/create", protectAdmin, adminOnly, createPlan);
+router.put("/:id", protectAdmin, adminOnly, updatePlan);
+router.delete("/:id", protectAdmin, adminOnly, deletePlan);
+router.put("/toggle/:id", protectAdmin, adminOnly, togglePlanStatus);
 
 module.exports = router;

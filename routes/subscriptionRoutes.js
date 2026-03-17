@@ -1,22 +1,32 @@
 const express = require("express");
 const router = express.Router();
 
+// user middleware
 const { protectUser } = require("../middleware/auth");
+
+// admin middleware
+const { protectAdmin } = require("../middleware/authMiddleware");
 
 const {
   mySubscription,
   allSubscriptions,
-  deleteSubscription
+  subscriptionDetails,
+  deleteSubscription,
+  adminDashboard,
+  createSubscription
 } = require("../controllers/subscriptionController");
 
-
-// 👤 user check own subscription
+// user
+router.post("/create", protectUser, createSubscription);
 router.get("/my", protectUser, mySubscription);
 
-// 👑 admin all subscriptions
-router.get("/all", protectUser, allSubscriptions);
+// admin
+router.get("/all", protectAdmin, allSubscriptions);
 
-// delete
-router.delete("/:id", protectUser, deleteSubscription);
+router.get("/dashboard/stats", protectAdmin, adminDashboard);
+
+router.get("/:id", protectAdmin, subscriptionDetails);
+
+router.delete("/:id", protectAdmin, deleteSubscription);
 
 module.exports = router;

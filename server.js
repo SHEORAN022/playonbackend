@@ -13,6 +13,9 @@ const prematchRoutes = require("./routes/prematchRoutes");
 const userRoutes = require("./routes/userRoutes");
 const planRoutes = require("./routes/planRoutes");
 const tournamentRoutes = require("./routes/tournamentRoutes");
+const matchRoutes = require("./routes/matchRoutes")
+const categoryRoutes = require("./routes/categoryRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
 
 
 app.use(cors());
@@ -33,7 +36,11 @@ app.use("/api/plans", planRoutes);          // 🔥 plans
 app.use("/api/subscription", require("./routes/subscriptionRoutes"));
 app.use("/api/payment", require("./routes/paymentRoutes"));
 app.use("/api/tournaments", tournamentRoutes);
-
+app.use("/api/matches", matchRoutes);
+app.use("/api/premium", require("./routes/premiumContentRoutes"));
+app.use("/api/highlight-category", require("./routes/highlightCategoryRoutes"));
+app.use("/api/categories", categoryRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 
 app.listen(process.env.PORT || 9000, ()=>{

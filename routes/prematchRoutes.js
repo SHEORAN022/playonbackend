@@ -8,7 +8,8 @@ const {
   getSinglePrematch,
   updatePrematch,
   deletePrematch,
-  toggleLive
+  toggleLive,
+  getMatchesByCategory
 } = require("../controllers/prematchController");
 
 const { protectAdmin, adminOnly } = require("../middleware/authMiddleware");
@@ -17,7 +18,8 @@ const { protectAdmin, adminOnly } = require("../middleware/authMiddleware");
 const cpUpload = upload.fields([
   { name: "image", maxCount: 1 },
   { name: "team1Logo", maxCount: 1 },
-  { name: "team2Logo", maxCount: 1 }
+  { name: "team2Logo", maxCount: 1 },
+  { name: "video", maxCount: 1 } // ✅ ADD THIS
 ]);
 
 // admin create
@@ -25,6 +27,9 @@ router.post("/create", protectAdmin, adminOnly, cpUpload, createPrematch);
 
 // get all
 router.get("/all", getAllPrematch);
+
+// category wise matches
+router.get("/category/:categoryId", getMatchesByCategory);
 
 // single
 router.get("/:id", getSinglePrematch);

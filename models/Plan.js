@@ -1,14 +1,40 @@
 const mongoose = require("mongoose");
 
-const planSchema = new mongoose.Schema({
-  title: String,          // 1 Month, 6 Months
-  price: Number,          // 99,199
-  duration: Number,       // days
-  features: [String],
-  status: {
-    type: Boolean,
-    default: true
+const optionSchema = new mongoose.Schema({
+  label: {
+    type: String,
+    required: true
+  },
+  duration: {
+    type: Number,
+    required: true
+  },
+  price: {
+    type: Number,
+    required: true
   }
 });
+
+const planSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      enum: ["Ads Free", "Ads Free + Content Free"]
+    },
+
+    description: String,
+
+    options: [optionSchema],
+
+    features: [String],
+
+    status: {
+      type: Boolean,
+      default: true
+    }
+  },
+  { timestamps: true }
+);
 
 module.exports = mongoose.model("Plan", planSchema);

@@ -1,36 +1,30 @@
+
+
 const express = require("express");
 const router = express.Router();
 
-/* ===== CONTROLLER IMPORT ===== */
 const {
   registerAdmin,
-  loginAdmin
+  loginAdmin,
+  getProfile,
+  updateProfile,
+  changePassword
 } = require("../controllers/adminAuthController");
 
-/* ===== MIDDLEWARE IMPORT ===== */
 const {
   protectAdmin,
   adminOnly
 } = require("../middleware/authMiddleware");
 
 
-/* ================= ADMIN AUTH ================= */
-
-// register admin
+// auth
 router.post("/register", registerAdmin);
-
-// login admin
 router.post("/login", loginAdmin);
 
 
-/* ================= ADMIN PRIVATE ================= */
-
-// admin profile check
-router.get("/profile", protectAdmin, adminOnly, (req, res) => {
-  res.json({
-    success: true,
-    admin: req.admin
-  });
-});
+// private
+router.get("/profile", protectAdmin, adminOnly, getProfile);
+router.put("/update-profile", protectAdmin, adminOnly, updateProfile);
+router.put("/change-password", protectAdmin, adminOnly, changePassword);
 
 module.exports = router;

@@ -6,6 +6,12 @@ const prematchSchema = new mongoose.Schema({
     required: true
   },
 
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+    required: true
+  },
+
   imageUrl: {
     type: String,
     default: ""
@@ -58,7 +64,7 @@ const prematchSchema = new mongoose.Schema({
   country: String,
 
   analysis: {
-    type: String,   // prematch analysis text
+    type: String,
     default: ""
   }
 

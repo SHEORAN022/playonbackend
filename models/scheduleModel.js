@@ -1,133 +1,126 @@
-// const mongoose = require("mongoose");
-
-// /* ================= MATCH SCHEMA ================= */
-// const matchSchema = new mongoose.Schema({
-//   team1: { type: String, required: true },
-//   team2: { type: String, required: true },
-
-//   team1Logo: String,
-//   team2Logo: String,
-
-//   venue: String,
-//   status: String, // Completed, Upcoming
-//   isLive: { type: Boolean, default: false },
-//   liveUrl: String
-// }, { _id: false });
-
-// /* ================= SECTION SCHEMA ================= */
-// const sectionSchema = new mongoose.Schema({
-//   date: String,   // Today 30th Jan
-//   title: String,  // Live Matches / Global League
-//   matches: [matchSchema]
-// }, { _id: false });
-
-// /* ================= MAIN SCHEDULE ================= */
-// const scheduleSchema = new mongoose.Schema({
-//   leagueName: String,  // optional
-//   sections: [sectionSchema],
-// }, { timestamps: true });
-
-// module.exports = mongoose.model("Schedule", scheduleSchema);
-
-
-
-
-
 const mongoose = require("mongoose");
 
 /* ================= MATCH SCHEMA ================= */
+
 const matchSchema = new mongoose.Schema({
+
   team1: {
     type: String,
     required: true,
+    trim: true
   },
 
   team2: {
     type: String,
     required: true,
+    trim: true
   },
 
   team1Logo: {
     type: String,
-    default: "",
+    default: ""   // cloudinary url
   },
 
   team2Logo: {
     type: String,
-    default: "",
+    default: ""   // cloudinary url
   },
 
-  bannerImage: {
+  matchBanner: {
     type: String,
-    default: "", // optional (future use)
+    default: ""   // cloudinary url
   },
 
   matchDateTime: {
-    type: Date, // optional for future sorting
+    type: Date,
+    required: true
   },
 
   status: {
     type: String,
-    default: "Upcoming", // Live / Completed / Upcoming
+    enum: ["Upcoming", "Live", "Finished"],
+    default: "Upcoming"
   },
 
   isLive: {
     type: Boolean,
-    default: false,
+    default: false
   },
 
   viewers: {
     type: Number,
-    default: 0,
+    default: 0
   },
 
   liveUrl: {
     type: String,
-    default: "",
+    default: ""
   },
 
   sport: {
     type: String,
-    default: "",
+    default: ""
   },
 
   country: {
     type: String,
-    default: "",
+    default: ""
   }
 
 }, { _id: true });
 
+
+
 /* ================= SECTION SCHEMA ================= */
+
 const sectionSchema = new mongoose.Schema({
+
   title: {
-    type: String, // "Live Matches"
-    default: "",
+    type: String,
+    default: ""
   },
 
   date: {
-    type: String, // "Today 30 Jan"
-    default: "",
+    type: String,
+    default: ""
   },
 
   matches: [matchSchema]
 
 }, { _id: false });
 
+
+
 /* ================= MAIN SCHEDULE ================= */
+
 const scheduleSchema = new mongoose.Schema({
+
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+    required: true,
+    index: true
+  },
+
   leagueName: {
     type: String,
     required: true,
+    trim: true
   },
 
   leagueLogo: {
     type: String,
-    default: "",
+    default: ""   // cloudinary url
+  },
+
+  leagueBanner: {
+    type: String,
+    default: ""   // cloudinary url
   },
 
   sections: [sectionSchema]
 
 }, { timestamps: true });
+
 
 module.exports = mongoose.model("Schedule", scheduleSchema);
