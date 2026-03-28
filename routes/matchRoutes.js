@@ -5,38 +5,54 @@ const matchController = require("../controllers/matchController");
 const { protectAdmin, adminOnly } = require("../middleware/authMiddleware");
 const upload = require("../middleware/upload");
 
+/* ================= PUBLIC ROUTES ================= */
 
-// Public
+// Get all matches
 router.get("/", matchController.getAllMatches);
+
+// Get matches by tournament
 router.get("/tournament/:tournamentId", matchController.getMatchesByTournament);
-router.get("/:id", matchController.getSingleMatch);
+
+// Get single match
+router.get("/single/:id", matchController.getSingleMatch);
 
 
-// Admin
+/* ================= ADMIN ROUTES ================= */
+
+// Add match
 router.post(
   "/add",
   protectAdmin,
   adminOnly,
   upload.fields([
-    { name: "imageUrl", maxCount: 1 },
+    { name: "image", maxCount: 1 },       // ✅ FIXED
     { name: "team1Logo", maxCount: 1 },
-    { name: "team2Logo", maxCount: 1 }
+    { name: "team2Logo", maxCount: 1 },
+    { name: "video", maxCount: 1 }
   ]),
   matchController.addMatch
 );
 
+// Update match
 router.put(
-  "/:id",
+  "/update/:id",
   protectAdmin,
   adminOnly,
   upload.fields([
-    { name: "imageUrl", maxCount: 1 },
+    { name: "image", maxCount: 1 },       // ✅ FIXED
     { name: "team1Logo", maxCount: 1 },
-    { name: "team2Logo", maxCount: 1 }
+    { name: "team2Logo", maxCount: 1 },
+    { name: "video", maxCount: 1 }
   ]),
   matchController.updateMatch
 );
 
-router.delete("/:id", protectAdmin, adminOnly, matchController.deleteMatch);
+// Delete match
+router.delete(
+  "/delete/:id",
+  protectAdmin,
+  adminOnly,
+  matchController.deleteMatch
+);
 
 module.exports = router;

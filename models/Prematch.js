@@ -1,10 +1,8 @@
 const mongoose = require("mongoose");
 
 const prematchSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true
-  },
+
+  title: String,
 
   category: {
     type: mongoose.Schema.Types.ObjectId,
@@ -12,39 +10,22 @@ const prematchSchema = new mongoose.Schema({
     required: true
   },
 
-  imageUrl: {
-    type: String,
-    default: ""
-  },
-
-  videoUrl: {
-    type: String,
-    default: ""
-  },
-
-  league: {
-    type: String,
-    default: ""
-  },
+  league: String,
 
   matchType: {
     type: String,
-    enum: ["LIVE", "UPCOMING", "COMPLETED"],
+    enum: ["UPCOMING", "LIVE", "FINISHED"],
     default: "UPCOMING"
   },
 
-  team1: {
-    type: String,
-    required: true
-  },
-
-  team2: {
-    type: String,
-    required: true
-  },
+  team1: String,
+  team2: String,
 
   team1Logo: String,
   team2Logo: String,
+
+  imageUrl: String,
+  videoUrl: String,
 
   isLive: {
     type: Boolean,
@@ -56,16 +37,21 @@ const prematchSchema = new mongoose.Schema({
     default: 0
   },
 
-  matchDate: {
-    type: Date
-  },
-
+  matchDate: Date,
   stadium: String,
   country: String,
+  analysis: String,
 
-  analysis: {
+  /* 🔐 LOCK SYSTEM */
+  isPremium: {
+    type: Boolean,
+    default: false
+  },
+
+  requiredPlan: {
     type: String,
-    default: ""
+    enum: ["Ads Free", "Ads Free + Content Free", null],
+    default: null
   }
 
 }, { timestamps: true });

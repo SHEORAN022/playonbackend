@@ -1,59 +1,62 @@
-
-
-
-
-const router = require("express").Router();
+const express = require("express");
+const router = express.Router();
 
 const highlightCategoryController = require("../controllers/highlightCategoryController");
 const { protectAdmin, adminOnly } = require("../middleware/authMiddleware");
+const { protectUser } = require("../middleware/auth");
 const upload = require("../middleware/upload");
 
 
-/* ================= ADMIN ================= */
+/* ================= USER ROUTES ================= */
 
-// Add highlight category
+// 🔓 Get all highlight categories (LOCK SYSTEM)
+router.get(
+  "/",
+  protectUser,
+  highlightCategoryController.getHighlightCategories
+);
+
+// 🔓 Get by category (with lock)
+router.get(
+  "/category/:categoryId",
+  protectUser,
+  highlightCategoryController.getHighlightCategoryByCategory
+);
+
+// 🔓 Get single (no lock check)
+router.get(
+  "/:id",
+  highlightCategoryController.getSingleHighlightCategory
+);
+
+
+
+/* ================= ADMIN ROUTES ================= */
+
+// ➕ Add highlight category
 router.post(
   "/add",
   protectAdmin,
   adminOnly,
+  upload.single("image"),
   highlightCategoryController.addHighlightCategory
 );
-// Get highlight categories by category id
-router.get(
-  "/category/:categoryId",
-  highlightCategoryController.getHighlightCategoryByCategory
-);
 
-// Update highlight category
+// ✏️ Update highlight category
 router.put(
   "/update/:id",
   protectAdmin,
   adminOnly,
-  upload.single("image"), 
+  upload.single("image"),
   highlightCategoryController.updateHighlightCategory
 );
 
-// Delete highlight category
+// ❌ Delete highlight category
 router.delete(
   "/delete/:id",
   protectAdmin,
   adminOnly,
   highlightCategoryController.deleteHighlightCategory
-);
-
-
-/* ================= PUBLIC ================= */
-
-// Get all highlight categories
-router.get(
-  "/",
-  highlightCategoryController.getHighlightCategories
-);
-
-// Get single highlight category
-router.get(
-  "/:id",
-  highlightCategoryController.getSingleHighlightCategory
 );
 
 

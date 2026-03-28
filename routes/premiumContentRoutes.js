@@ -1,85 +1,41 @@
-// const express = require("express");
-// const router = express.Router();
-
-// const premiumCtrl = require("../controllers/premiumContentController");
-// const { protectAdmin, adminOnly } = require("../middleware/authMiddleware");
-// const upload = require("../middleware/upload");
-
-
-// /* ===============================
-//    PUBLIC ROUTES
-// ================================ */
-
-// // Get all premium content
-// router.get("/", premiumCtrl.getAllPremiumContent);
-
-// // Get premium content by category
-// router.get("/category/:categoryId", premiumCtrl.getPremiumContentByCategory);
-
-// // Get single premium content
-// router.get("/:id", premiumCtrl.getPremiumContentById);
-
-
-
-// /* ===============================
-//    ADMIN ROUTES
-// ================================ */
-
-// // Add premium content
-// router.post(
-//   "/add",
-//   protectAdmin,
-//   adminOnly,
-//   upload.single("image"),
-//   premiumCtrl.addPremiumContent
-// );
-
-// // Update premium content
-// router.put(
-//   "/update/:id",
-//   protectAdmin,
-//   adminOnly,
-//   upload.single("image"),
-//   premiumCtrl.updatePremiumContent
-// );
-
-// // Delete premium content
-// router.delete(
-//   "/delete/:id",
-//   protectAdmin,
-//   adminOnly,
-//   premiumCtrl.deletePremiumContent
-// );
-
-// module.exports = router;
-
-
 const express = require("express");
 const router = express.Router();
 
 const premiumCtrl = require("../controllers/premiumContentController");
+
+// 🔐 middlewares
 const { protectAdmin, adminOnly } = require("../middleware/authMiddleware");
+const { protectUser } = require("../middleware/auth");
+
 const upload = require("../middleware/upload");
 
 /* ===============================
-   PUBLIC ROUTES
+   USER ROUTES (LOCK SYSTEM ENABLED)
 ================================ */
 
-// Get all premium content
-router.get("/", premiumCtrl.getAllPremiumContent);
+// 🔥 Get all premium content (LOCK / UNLOCK)
+router.get("/", protectUser, premiumCtrl.getAllPremiumContent);
 
-// Get premium content by category
-router.get("/category/:categoryId", premiumCtrl.getPremiumContentByCategory);
+// 🔥 Category wise (LOCK WORKING)
+router.get(
+  "/category/:categoryId",
+  protectUser,
+  premiumCtrl.getPremiumContentByCategory
+);
 
-// Get single premium content
-router.get("/:id", premiumCtrl.getPremiumContentById);
+// 🔥 Single (LOCK CHECK INCLUDED)
+router.get(
+  "/:id",
+  protectUser,
+  premiumCtrl.getPremiumContentById
+);
 
 
 /* ===============================
    ADMIN ROUTES
 ================================ */
 
-// ✅ Add premium content (IMAGE + VIDEO)
+// ➕ Add premium content
 router.post(
   "/add",
   protectAdmin,
@@ -91,7 +47,7 @@ router.post(
   premiumCtrl.addPremiumContent
 );
 
-// ✅ Update premium content (IMAGE + VIDEO)
+// ✏️ Update premium content
 router.put(
   "/update/:id",
   protectAdmin,
@@ -103,7 +59,7 @@ router.put(
   premiumCtrl.updatePremiumContent
 );
 
-// Delete premium content
+// ❌ Delete premium content
 router.delete(
   "/delete/:id",
   protectAdmin,

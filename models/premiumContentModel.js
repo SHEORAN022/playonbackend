@@ -1,70 +1,94 @@
 const mongoose = require("mongoose");
 
 /* ===============================
-   PREMIUM FEATURE SCHEMA
+   FEATURE SCHEMA
 ================================*/
 const premiumFeatureSchema = new mongoose.Schema(
   {
     icon: {
-      type: String, // Flutter icon name
+      type: String, // e.g. "lock", "star", etc
       required: true,
-      trim: true,
+      trim: true
     },
     text: {
       type: String,
       required: true,
-      trim: true,
-    },
+      trim: true
+    }
   },
   { _id: false }
 );
 
 /* ===============================
-   PREMIUM CONTENT SCHEMA
+   MAIN SCHEMA
 ================================*/
 const premiumContentSchema = new mongoose.Schema(
   {
     title: {
       type: String,
       required: true,
-      trim: true,
+      trim: true
     },
 
     imagePath: {
       type: String,
       required: true,
-      trim: true,
+      trim: true
     },
 
+    // 🔥 FIX: ObjectId instead of String
     category: {
-      type: String,
-      default: "",
-      trim: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: true
     },
 
     amount: {
       type: Number,
       required: true,
+      min: 0
     },
 
     discount: {
       type: Number,
       required: true,
+      min: 0
     },
 
     videoUrl: {
       type: String,
       default: null,
-      trim: true,
+      trim: true
     },
 
+    /* 🔐 LOCK SYSTEM */
+    isPremium: {
+      type: Boolean,
+      default: true
+    },
+
+    requiredPlan: {
+      type: String,
+      enum: ["Ads Free", "Ads Free + Content Free", null],
+      default: null
+    },
+
+    /* 🧾 FEATURES */
     features: {
       type: [premiumFeatureSchema],
-      default: [],
+      default: []
     },
+
+    /* 🔥 STATUS CONTROL (optional but useful) */
+    status: {
+      type: String,
+      enum: ["active", "inactive"],
+      default: "active"
+    }
+
   },
   {
-    timestamps: true,
+    timestamps: true
   }
 );
 

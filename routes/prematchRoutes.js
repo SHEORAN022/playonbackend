@@ -2,6 +2,11 @@ const express = require("express");
 const router = express.Router();
 const upload = require("../middleware/upload");
 
+// 🔐 middlewares
+const { protectAdmin, adminOnly } = require("../middleware/authMiddleware");
+const { protectUser } = require("../middleware/auth");
+
+// controllers
 const {
   createPrematch,
   getAllPrematch,
@@ -12,35 +17,38 @@ const {
   getMatchesByCategory
 } = require("../controllers/prematchController");
 
-const { protectAdmin, adminOnly } = require("../middleware/authMiddleware");
-
 /* upload fields */
 const cpUpload = upload.fields([
   { name: "image", maxCount: 1 },
   { name: "team1Logo", maxCount: 1 },
   { name: "team2Logo", maxCount: 1 },
-  { name: "video", maxCount: 1 } // ✅ ADD THIS
+  { name: "video", maxCount: 1 }
 ]);
 
-// admin create
-router.post("/create", protectAdmin, adminOnly, cpUpload, createPrematch);
+/* ================= USER ROUTES (LOCK SYSTEM) ================= */
 
-// get all
-router.get("/all", getAllPrematch);
+// 🔥 GET ALL (lock/unlock working)
+router.get("/all", protectUser, getAllPrematch);
 
-// category wise matches
-router.get("/category/:categoryId", getMatchesByCategory);
+// 🔥 CATEGORY FILTER (lock working)
+router.get("/category/:categoryId", protectUser, getMatchesByCategory);
 
-// single
+// 🔓 SINGLE (no lock check needed)
 router.get("/:id", getSinglePrematch);
 
-// update
+
+/* ================= ADMIN ROUTES ================= */
+
+// ➕ create
+router.post("/create", protectAdmin, adminOnly, cpUpload, createPrematch);
+
+// ✏️ update
 router.put("/update/:id", protectAdmin, adminOnly, cpUpload, updatePrematch);
 
-// delete
+// ❌ delete
 router.delete("/delete/:id", protectAdmin, adminOnly, deletePrematch);
 
-// live toggle
+// 🔴 toggle live
 router.put("/live/:id", protectAdmin, adminOnly, toggleLive);
 
 module.exports = router;

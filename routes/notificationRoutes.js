@@ -1,15 +1,47 @@
+
 const express = require("express");
 const router = express.Router();
 
-const {
-  sendNotificationToAll,
-  getNotifications
-} = require("../controllers/notificationController");
+const sendNotification = require("../utils/oneSignal");
 
-// Send notification
-router.post("/send", sendNotificationToAll);
+/* ================= SEND NOTIFICATION ================= */
 
-// Get all notifications
-router.get("/", getNotifications);
+// 🔔 Send to specific users
+router.post("/send", async (req, res) => {
+  try {
+    const { playerIds, title, message } = req.body;
+
+    // validation
+    if (!title || !message) {
+      return res.status(400).json({
+        success: false,
+        message: "Title and message are required"
+      });
+    }
+
+    // agar playerIds nahi bheja → sabko send kare
+    let result;
+
+    if (playerIds && playerIds.length > 0) {
+      result = await sendNotification(playerIds, title, message);
+    } else {
+      result = await sendNotification(null, title, message); // all users
+    }
+
+    res.json({
+      success: true,
+      message: "Notification sent successfully 🔥",
+      data: result
+    });
+
+  } catch (error) {
+    console.error("Notification Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+});
 
 module.exports = router;

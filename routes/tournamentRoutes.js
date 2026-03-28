@@ -3,25 +3,27 @@ const router = express.Router();
 
 const tournamentController = require("../controllers/tournamentController");
 const { protectAdmin, adminOnly } = require("../middleware/authMiddleware");
+const { protectUser } = require("../middleware/auth");
 const upload = require("../middleware/upload");
 
 
-/* ================= PUBLIC ROUTES ================= */
+/* ================= USER ROUTES ================= */
 
-// Get all tournaments
-router.get("/", tournamentController.getAllTournaments);
+// 🔓 Get all active tournaments
+router.get("/", protectUser, tournamentController.getAllTournaments);
 
-// Get tournaments by category
+// 🔓 Get tournaments by category
 router.get("/category/:categoryId", tournamentController.getTournamentsByCategory);
 
-// Get single tournament
+// 🔐 Get single tournament (LOCK SYSTEM)
+// router.get("/:id", protectUser, tournamentController.getSingleTournament);
 router.get("/:id", tournamentController.getSingleTournament);
 
 
 
 /* ================= ADMIN ROUTES ================= */
 
-// Add tournament
+// ➕ Add tournament
 router.post(
   "/add",
   protectAdmin,
@@ -30,7 +32,7 @@ router.post(
   tournamentController.addTournament
 );
 
-// Update tournament
+// ✏️ Update tournament
 router.put(
   "/update/:id",
   protectAdmin,
@@ -39,12 +41,20 @@ router.put(
   tournamentController.updateTournament
 );
 
-// Delete tournament
+// ❌ Delete tournament
 router.delete(
   "/delete/:id",
   protectAdmin,
   adminOnly,
   tournamentController.deleteTournament
+);
+
+// 🔥 Toggle Premium
+router.patch(
+  "/premium/:id",
+  protectAdmin,
+  adminOnly,
+  tournamentController.togglePremium
 );
 
 module.exports = router;

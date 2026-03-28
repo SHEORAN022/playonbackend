@@ -41,32 +41,59 @@ const sendNotificationToAll = async (req, res) => {
 
     /* SEND FCM NOTIFICATION */
 
-    const response = await admin.messaging().sendEachForMulticast({
-      tokens: tokens,
+    // const response = await admin.messaging().sendEachForMulticast({
+    //   tokens: tokens,
 
-      notification: {
-        title: title,
-        body: message
-      },
+    //   notification: {
+    //     title: title,
+    //     body: message
+    //   },
 
-      data: {
-        time: time
-      },
+    //   data: {
+    //     time: time
+    //   },
 
-      android: {
-        priority: "high"
-      },
+    //   android: {
+    //     priority: "high"
+    //   },
 
-      apns: {
-        payload: {
-          aps: {
-            sound: "default"
-          }
-        }
+    //   apns: {
+    //     payload: {
+    //       aps: {
+    //         sound: "default"
+    //       }
+    //     }
+    //   }
+
+    // });
+const response = await admin.messaging().sendEachForMulticast({
+  tokens,
+
+  notification: {
+    title,
+    body: message
+  },
+
+  data: {
+    time: time.toString()
+  },
+
+  android: {
+    priority: "high",
+    notification: {
+      sound: "default",
+      channelId: "default"
+    }
+  },
+
+  apns: {
+    payload: {
+      aps: {
+        sound: "default"
       }
-
-    });
-
+    }
+  }
+});
     let invalidTokens = [];
 
     /* CHECK ERRORS */

@@ -1,279 +1,5 @@
-// const Prematch = require("../models/Prematch");
-
-// /* ================= CREATE PREMATCH ================= */
-// exports.createPrematch = async (req, res) => {
-//   try {
-
-//     let imageUrl = req.body.imageUrl || "";
-//     let team1Logo = req.body.team1Logo || "";
-//     let team2Logo = req.body.team2Logo || "";
-
-//     if (req.files?.image) {
-//       imageUrl = req.files.image[0].path;
-//     }
-
-//     if (req.files?.team1Logo) {
-//       team1Logo = req.files.team1Logo[0].path;
-//     }
-
-//     if (req.files?.team2Logo) {
-//       team2Logo = req.files.team2Logo[0].path;
-//     }
-
-//     const match = await Prematch.create({
-//       title: req.body.title,
-//       category: req.body.category,
-//       league: req.body.league,
-//       videoUrl: req.body.videoUrl,
-//       matchType: req.body.matchType,
-//       team1: req.body.team1,
-//       team2: req.body.team2,
-//       isLive: req.body.isLive || false,
-//       viewers: req.body.viewers || 0,
-//       matchDate: req.body.matchDate,
-//       stadium: req.body.stadium,
-//       country: req.body.country,
-//       analysis: req.body.analysis,
-//       imageUrl,
-//       team1Logo,
-//       team2Logo
-//     });
-
-//     res.status(201).json({
-//       success: true,
-//       message: "Prematch created successfully",
-//       data: match
-//     });
-
-//   } catch (error) {
-
-//     res.status(500).json({
-//       success: false,
-//       message: error.message
-//     });
-
-//   }
-// };
-
-
-// /* ================= GET ALL MATCH ================= */
-// exports.getAllPrematch = async (req, res) => {
-//   try {
-
-//     const filter = {};
-
-//     if (req.query.category) {
-//       filter.category = req.query.category;
-//     }
-
-//     if (req.query.matchType) {
-//       filter.matchType = req.query.matchType;
-//     }
-
-//     const matches = await Prematch
-//       .find(filter)
-//       .populate("category", "title icon")
-//       .sort({ createdAt: -1 });
-
-//     res.status(200).json({
-//       success: true,
-//       total: matches.length,
-//       data: matches
-//     });
-
-//   } catch (error) {
-
-//     res.status(500).json({
-//       success: false,
-//       message: error.message
-//     });
-
-//   }
-// };
-
-
-// /* ================= GET SINGLE MATCH ================= */
-// exports.getSinglePrematch = async (req, res) => {
-//   try {
-
-//     const match = await Prematch
-//       .findById(req.params.id)
-//       .populate("category", "title icon");
-
-//     if (!match) {
-//       return res.status(404).json({
-//         success: false,
-//         message: "Match not found"
-//       });
-//     }
-
-//     res.status(200).json({
-//       success: true,
-//       data: match
-//     });
-
-//   } catch (error) {
-
-//     res.status(500).json({
-//       success: false,
-//       message: error.message
-//     });
-
-//   }
-// };
-
-
-// /* ================= UPDATE PREMATCH ================= */
-// exports.updatePrematch = async (req, res) => {
-//   try {
-
-//     const match = await Prematch.findById(req.params.id);
-
-//     if (!match) {
-//       return res.status(404).json({
-//         success: false,
-//         message: "Match not found"
-//       });
-//     }
-
-//     if (req.files?.image) {
-//       match.imageUrl = req.files.image[0].path;
-//     }
-
-//     if (req.files?.team1Logo) {
-//       match.team1Logo = req.files.team1Logo[0].path;
-//     }
-
-//     if (req.files?.team2Logo) {
-//       match.team2Logo = req.files.team2Logo[0].path;
-//     }
-
-//     match.title = req.body.title || match.title;
-//     match.category = req.body.category || match.category;
-//     match.league = req.body.league || match.league;
-//     match.videoUrl = req.body.videoUrl || match.videoUrl;
-//     match.matchType = req.body.matchType || match.matchType;
-//     match.team1 = req.body.team1 || match.team1;
-//     match.team2 = req.body.team2 || match.team2;
-//     match.isLive = req.body.isLive ?? match.isLive;
-//     match.viewers = req.body.viewers ?? match.viewers;
-//     match.matchDate = req.body.matchDate || match.matchDate;
-//     match.stadium = req.body.stadium || match.stadium;
-//     match.country = req.body.country || match.country;
-//     match.analysis = req.body.analysis || match.analysis;
-
-//     await match.save();
-
-//     res.status(200).json({
-//       success: true,
-//       message: "Prematch updated successfully",
-//       data: match
-//     });
-
-//   } catch (error) {
-
-//     res.status(500).json({
-//       success: false,
-//       message: error.message
-//     });
-
-//   }
-// };
-
-
-// /* ================= DELETE PREMATCH ================= */
-// exports.deletePrematch = async (req, res) => {
-//   try {
-
-//     const match = await Prematch.findById(req.params.id);
-
-//     if (!match) {
-//       return res.status(404).json({
-//         success: false,
-//         message: "Match not found"
-//       });
-//     }
-
-//     await match.deleteOne();
-
-//     res.status(200).json({
-//       success: true,
-//       message: "Prematch deleted successfully"
-//     });
-
-//   } catch (error) {
-
-//     res.status(500).json({
-//       success: false,
-//       message: error.message
-//     });
-
-//   }
-// };
-
-
-// /* ================= TOGGLE LIVE ================= */
-// exports.toggleLive = async (req, res) => {
-//   try {
-
-//     const match = await Prematch.findById(req.params.id);
-
-//     if (!match) {
-//       return res.status(404).json({
-//         success: false,
-//         message: "Match not found"
-//       });
-//     }
-
-//     match.isLive = !match.isLive;
-//     match.matchType = match.isLive ? "LIVE" : "UPCOMING";
-
-//     await match.save();
-
-//     res.status(200).json({
-//       success: true,
-//       message: "Live status updated",
-//       data: match
-//     });
-
-//   } catch (error) {
-
-//     res.status(500).json({
-//       success: false,
-//       message: error.message
-//     });
-
-//   }
-// };
-// /* ================= GET MATCHES BY CATEGORY ================= */
-// exports.getMatchesByCategory = async (req, res) => {
-//   try {
-
-//     const matches = await Prematch
-//       .find({ category: req.params.categoryId })
-//       .populate("category", "title icon")
-//       .sort({ createdAt: -1 });
-
-//     res.status(200).json({
-//       success: true,
-//       total: matches.length,
-//       data: matches
-//     });
-
-//   } catch (error) {
-
-//     res.status(500).json({
-//       success: false,
-//       message: error.message
-//     });
-
-//   }
-// };
-
-
-
-
 const Prematch = require("../models/Prematch");
+const Subscription = require("../models/Subscription");
 const uploadToBunny = require("../utils/uploadToBunny");
 
 /* ================= CREATE PREMATCH ================= */
@@ -293,7 +19,7 @@ exports.createPrematch = async (req, res) => {
       );
     }
 
-    // TEAM 1 LOGO
+    // TEAM LOGO 1
     if (req.files?.team1Logo?.[0]) {
       const file = req.files.team1Logo[0];
       team1Logo = await uploadToBunny(
@@ -302,7 +28,7 @@ exports.createPrematch = async (req, res) => {
       );
     }
 
-    // TEAM 2 LOGO
+    // TEAM LOGO 2
     if (req.files?.team2Logo?.[0]) {
       const file = req.files.team2Logo[0];
       team2Logo = await uploadToBunny(
@@ -325,10 +51,13 @@ exports.createPrematch = async (req, res) => {
       category: req.body.category,
       league: req.body.league,
       matchType: req.body.matchType || "UPCOMING",
+
       team1: req.body.team1,
       team2: req.body.team2,
-      isLive: req.body.isLive || false,
+
+      isLive: req.body.isLive === "true",
       viewers: req.body.viewers || 0,
+
       matchDate: req.body.matchDate,
       stadium: req.body.stadium,
       country: req.body.country,
@@ -337,7 +66,11 @@ exports.createPrematch = async (req, res) => {
       imageUrl,
       team1Logo,
       team2Logo,
-      videoUrl
+      videoUrl,
+
+      // 🔐 LOCK SYSTEM
+      isPremium: req.body.isPremium === "true",
+      requiredPlan: req.body.requiredPlan || null
     });
 
     res.status(201).json({
@@ -356,27 +89,54 @@ exports.createPrematch = async (req, res) => {
 };
 
 
-/* ================= GET ALL ================= */
+/* ================= GET ALL (WITH LOCK SYSTEM) ================= */
 exports.getAllPrematch = async (req, res) => {
   try {
-    const filter = {};
-
-    if (req.query.category) filter.category = req.query.category;
-    if (req.query.matchType) filter.matchType = req.query.matchType;
-
-    const matches = await Prematch
-      .find(filter)
+    const matches = await Prematch.find()
       .populate("category", "title icon")
       .sort({ createdAt: -1 });
 
+    let userSub = null;
+
+    if (req.user?.id) {
+      userSub = await Subscription.findOne({
+        user: req.user.id,
+        status: "active",
+        endDate: { $gt: new Date() }
+      }).populate("plan");
+    }
+
+    const updated = matches.map((match) => {
+      let locked = false;
+
+      const userPlan = userSub?.plan?.title?.toLowerCase();
+      const requiredPlan = match.requiredPlan?.toLowerCase();
+
+      if (match.isPremium) {
+        if (!userSub) {
+          locked = true;
+        } else if (requiredPlan && userPlan !== requiredPlan) {
+          locked = true;
+        }
+      }
+
+      return {
+        ...match.toObject(),
+        locked
+      };
+    });
+
     res.status(200).json({
       success: true,
-      total: matches.length,
-      data: matches
+      total: updated.length,
+      data: updated
     });
 
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
   }
 };
 
@@ -384,8 +144,7 @@ exports.getAllPrematch = async (req, res) => {
 /* ================= GET SINGLE ================= */
 exports.getSinglePrematch = async (req, res) => {
   try {
-    const match = await Prematch
-      .findById(req.params.id)
+    const match = await Prematch.findById(req.params.id)
       .populate("category", "title icon");
 
     if (!match) {
@@ -401,7 +160,10 @@ exports.getSinglePrematch = async (req, res) => {
     });
 
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
   }
 };
 
@@ -427,7 +189,7 @@ exports.updatePrematch = async (req, res) => {
       );
     }
 
-    // TEAM LOGOS
+    // LOGOS
     if (req.files?.team1Logo?.[0]) {
       const file = req.files.team1Logo[0];
       match.team1Logo = await uploadToBunny(
@@ -453,19 +215,31 @@ exports.updatePrematch = async (req, res) => {
       );
     }
 
-    // TEXT FIELDS UPDATE
+    // UPDATE FIELDS
     match.title = req.body.title || match.title;
     match.category = req.body.category || match.category;
     match.league = req.body.league || match.league;
     match.matchType = req.body.matchType || match.matchType;
+
     match.team1 = req.body.team1 || match.team1;
     match.team2 = req.body.team2 || match.team2;
-    match.isLive = req.body.isLive ?? match.isLive;
+
+    match.isLive = req.body.isLive === "true" ? true : match.isLive;
     match.viewers = req.body.viewers ?? match.viewers;
+
     match.matchDate = req.body.matchDate || match.matchDate;
     match.stadium = req.body.stadium || match.stadium;
     match.country = req.body.country || match.country;
     match.analysis = req.body.analysis || match.analysis;
+
+    // 🔐 LOCK UPDATE
+    if (req.body.isPremium !== undefined) {
+      match.isPremium = req.body.isPremium === "true";
+    }
+
+    if (req.body.requiredPlan !== undefined) {
+      match.requiredPlan = req.body.requiredPlan || null;
+    }
 
     await match.save();
 
@@ -505,7 +279,10 @@ exports.deletePrematch = async (req, res) => {
     });
 
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
   }
 };
 
@@ -534,26 +311,63 @@ exports.toggleLive = async (req, res) => {
     });
 
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
   }
 };
 
 
-/* ================= CATEGORY FILTER ================= */
+/* ================= CATEGORY FILTER (WITH LOCK) ================= */
 exports.getMatchesByCategory = async (req, res) => {
   try {
-    const matches = await Prematch
-      .find({ category: req.params.categoryId })
+    const matches = await Prematch.find({
+      category: req.params.categoryId
+    })
       .populate("category", "title icon")
       .sort({ createdAt: -1 });
 
+    let userSub = null;
+
+    if (req.user?.id) {
+      userSub = await Subscription.findOne({
+        user: req.user.id,
+        status: "active",
+        endDate: { $gt: new Date() }
+      }).populate("plan");
+    }
+
+    const updated = matches.map((match) => {
+      let locked = false;
+
+      const userPlan = userSub?.plan?.title?.toLowerCase();
+      const requiredPlan = match.requiredPlan?.toLowerCase();
+
+      if (match.isPremium) {
+        if (!userSub) {
+          locked = true;
+        } else if (requiredPlan && userPlan !== requiredPlan) {
+          locked = true;
+        }
+      }
+
+      return {
+        ...match.toObject(),
+        locked
+      };
+    });
+
     res.status(200).json({
       success: true,
-      total: matches.length,
-      data: matches
+      total: updated.length,
+      data: updated
     });
 
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
   }
 };
