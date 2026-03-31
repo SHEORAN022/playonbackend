@@ -35,21 +35,25 @@ const liveTvSchema = new mongoose.Schema(
     default: "url"
   },
 
-  category: {
-    type: String,
-    enum: [
-      "News",
-      "Sports",
-      "Entertainment",
-      "Movies",
-      "Music",
-      "Kids",
-      "Religious",
-      "Other"
-    ],
-    default: "Other"
-  },
-
+  // category: {
+  //   type: String,
+  //   enum: [
+  //     "News",
+  //     "Sports",
+  //     "Entertainment",
+  //     "Movies",
+  //     "Music",
+  //     "Kids",
+  //     "Religious",
+  //     "Other"
+  //   ],
+  //   default: "Other"
+  // },
+category: {
+  type: String,
+  required: true,
+  trim: true
+},
   language: {
     type: String,
     default: "Hindi"
