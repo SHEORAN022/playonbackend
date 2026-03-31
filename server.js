@@ -41,6 +41,9 @@ app.use("/api/premium", require("./routes/premiumContentRoutes"));
 app.use("/api/highlight-category", require("./routes/highlightCategoryRoutes"));
 app.use("/api/categories", categoryRoutes);
 app.use("/api/notifications", notificationRoutes);
+const channelCategoryRoutes = require("./routes/channelCategoryRoutes");
+
+app.use("/api/channel-categories", channelCategoryRoutes);
 
 
 app.listen(process.env.PORT || 9000, ()=>{
