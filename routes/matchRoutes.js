@@ -39,7 +39,7 @@ router.put(
   protectAdmin,
   adminOnly,
   upload.fields([
-    { name: "image", maxCount: 1 },       // ✅ FIXED
+    { name: "image", maxCount: 1 },       // ✅ F
     { name: "team1Logo", maxCount: 1 },
     { name: "team2Logo", maxCount: 1 },
     { name: "video", maxCount: 1 }
